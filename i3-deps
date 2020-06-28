@@ -1,0 +1,14 @@
+#!/bin/bash
+
+shopt -s nocasematch
+
+case "$REZ_OS_MAJOR_VERSION" in
+    centos) INSTALL_CMD=(yum install) ;;
+    *)
+        echo "Installing i3 dependencies not supported yet for $REZ_OS_MAJOR_VERSION"
+        exit 1;;
+esac
+
+set -x
+cd "$REZ_I3_GAPS_ROOT"/etc/i3/deps
+exec sudo "${INSTALL_CMD[@]}" *

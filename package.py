@@ -1,6 +1,9 @@
 name = "i3_gaps"
 
-version = "4.18.1"
+__version__ = "4.18.1"
+version = __version__ + "+local.1.0.0"
+
+variants = [["platform-linux", "os-centos", "arch-x86_64"]]
 
 
 @late()
@@ -22,8 +25,13 @@ set -euf -o pipefail
 IIDFILE=$(mktemp "$REZ_BUILD_PATH"/DockerImageXXXXX)
 cp -v "$REZ_BUILD_SOURCE_PATH"/entrypoint.sh \
     "$REZ_BUILD_SOURCE_PATH"/Dockerfile \
+    "$REZ_BUILD_SOURCE_PATH"/i3-deps \
     "$REZ_BUILD_PATH"
-docker build --rm --iidfile "$IIDFILE" "$REZ_BUILD_PATH"
+docker build \
+    --build-arg CENTOS_VERSION="$REZ_OS_MINOR_VERSION" \
+    --rm \
+    --iidfile "$IIDFILE" \
+    "$REZ_BUILD_PATH"
 
 CONTAINER_ARGS=()
 [ -t 1 ] && CONTAINER_ARGS+=("-it") || :
@@ -40,12 +48,12 @@ then
     docker start -ia "$CONTAINTER_ID"
     docker cp "$CONTAINTER_ID":"{install_dir}"/. "{install_dir}"
     docker rm "$CONTAINTER_ID"
-    echo "Please run: sudo yum install '{install_dir}/etc/i3/deps'/*.rpm"
+    echo "Please run: rez env $REZ_BUILD_PROJECT_NAME -- i3-deps"
 fi
 """.format(
     CONTAINER_ARGS="${{CONTAINER_ARGS[@]}}",
     install_dir="${{REZ_BUILD_INSTALL_PATH:-/usr/local}}",
-    version=version,
+    version=__version__,
 )
 
 

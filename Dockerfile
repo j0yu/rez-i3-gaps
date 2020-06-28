@@ -1,4 +1,5 @@
-FROM centos:7
+ARG CENTOS_VERSION=7
+FROM centos:$CENTOS_VERSION
 
 RUN yum -y install epel-release
 
@@ -34,4 +35,5 @@ ENV PKG_CONFIG_LIBDIR=/usr/lib/pkgconfig:/usr/lib64/pkgconfig
 ENV PKG_CONFIG_PATH=/usr/share/pkgconfig
 
 COPY entrypoint.sh /
+COPY i3-deps /usr/local/bin/
 ENTRYPOINT ["bash", "/entrypoint.sh"]

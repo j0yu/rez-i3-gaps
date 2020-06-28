@@ -19,6 +19,9 @@ Here are some beginners instructions on how to use this repository.
 
 i3 should now be installed as a [rez] package named `i3_gaps`.
 
+Then to install the system dependencies, i.e. on CentOS 7, you would then 
+run `rez env i3_gaps -- i3-deps`
+
 ## Usage
 
 If you're using a custom X11 startup, i.e. running `startx` directly after
